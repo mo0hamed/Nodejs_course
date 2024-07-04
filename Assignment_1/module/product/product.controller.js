@@ -2,10 +2,10 @@ import {connectionToDB} from '../../db/db_connection.js'
 const connect = connectionToDB()
 
 export const addProduct =(req,res)=>{
-  const { id,product_name,category,unit_price } = req.body;
+  const {id,product_name,category,unit_price } = req.body
   connect.query(
     'INSERT INTO product SET ?',
-    { id,product_name,category,unit_price },
+    { id,product_name,category,unit_price,},
     (err, result) => {
       if (err) return res.json({ message: err })
       else res.json(result)

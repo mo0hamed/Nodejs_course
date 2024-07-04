@@ -1,13 +1,27 @@
 import {connectionToDB} from '../../db/db_connection.js'
 const connect = connectionToDB()
 
-export const createOrder =(req,res)=>{
+export const createOrder = (req, res) => {
+  const { id, customer_id, order_date, total_amount } = req.body
+
   connect.query(
-    'INSERT INTO `order` SET ?',
-    req.body,
+    'SELECT * FROM customer WHERE id = ?',
+    [customer_id],
     (err, result) => {
-      if (err) return res.json({ message: err })
-      else res.json(result)
+      if (err) {
+        return res.status(500).json({ message: 'Database error', error: err })
+      }
+      connect.query(
+        'INSERT INTO `order` SET ?',
+        { id, customer_id, order_date, total_amount },
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({ message: 'Database error', error: err })
+          } else {
+            res.status(201).json({ message: 'Order created successfully', result })
+          }
+        }
+      )
     }
   )
 }
