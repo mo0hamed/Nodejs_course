@@ -1,21 +1,19 @@
-import {connectionToDB} from '../../db/db_connection'
+import {connectionToDB} from '../../db/db_connection.js'
 const conn = connectionToDB()
 
 export const signup = (req, res) => {
-  const { first_name, last_name, email, phone } = req.body
-  conn.query(
-    `INSERT INTO customer SET ?`,
-    {
-      first_name,
-      last_name,
-      email,
-      phone,
-    },
-    (err, result) => {
-      if (err) return res.json({ message: err })
-      else res.json(result)
-    }
-  )
+  const { id ,first_name, last_name, email, phone } = req.body
+    conn.query(
+      `INSERT INTO customer SET ?`,
+      { id,first_name, last_name, email, phone,},
+      (err, result) => {
+        if (err) {
+          console.error(err)
+          return res.status(500).json({ message: 'Database error', error: err })
+        }
+        res.status(201).json({ message: 'Customer created successfully', result });
+      }
+    )
 }
 
 export const login = (req, res) => {
